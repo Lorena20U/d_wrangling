@@ -127,11 +127,20 @@ examen
 
 
 
-
+```{r setup, include=FALSE}
+library(tidyverse)
+library(highcharter)
+library(readr)
+library(ggplot2)
+```
 ## B
 A. De los clientes que están en más de un país,¿cuál cree que es el más rentable y por qué?
 ```{r cache=TRUE, include=FALSE}
 tabla <- readRDS("parcial_anonimo.rds")
+tabla <- tabla %>%
+  mutate_if(is.character, as.factor) %>%
+  rename_all(., .funs = tolower)
+
 tabla
 ```
 
@@ -139,16 +148,6 @@ tabla
 #cuantos paises tenemos
 pais <- tabla[,4]
 pais
-
-#tabla %>%
- # select(pais, cliente) %>%
-  #group_by(pais) %>%
-  #summarise(n = n_distinct(cliente)) %>%
-  #hchart("column", hcaes(x = pais, y = n)) %>%
-  #hc_add_theme(hc_theme_darkunica()) %>%
-  #hc_title(text = "<b>Frecuencia de las unidades </b>") %>%
-  #hc_subtitle(text = " <i>Los camiones grandes son las unidades que más se utilizan.</i>")
-
 ```
 ```{r}
 #cuantos paises tenemos
@@ -157,9 +156,27 @@ table(pais)
 ```
 
 ```{r include=FALSE}
+rentabilidad <- tabla %>%
+  select(pais, cliente) %>%
+  group_by(pais) %>%
+  summarise(n = n_distinct(cliente))
 
+```
+```{r}
+rentabilidad
+max(rentabilidad[,2])
+```
+El pais con mayor rentabilidad segun la cantidad de clientes distintos que tenga es el del codigo 4f03bd9b, con un total de 1544 clientes. 
 
-
+``` {r echo=FALSE}
+titulo <- "Histograma de los datos"
+subtitulo <- "pas"
+ggplot(rentabilidad, aes(x = seq_along(pais), y = n)) + 
+  geom_area(fill = 4,
+            alpha = 0.5,
+            color = 1,    # Color de la línea
+            lwd = 0.5,    # Ancho de la línea
+            linetype = 1)
 ```
 
 B. Estrategia de negocio ha decidido que ya no operará en aquellos territorios cuyas pérdidas sean "considerables". Bajo su criterio, ¿cuáles son estos territorios y por qué ya no debemos operar ahí?
