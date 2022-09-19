@@ -25,7 +25,7 @@ Indicaciones generales:
 
 ```{r, echo=TRUE, cache=TRUE}
 
-#set.seed("escriba acá su carné") 
+#set.seed("20200396") 
 v<- 1:10
 preguntas <-sort(sample(v, size = 5, replace = FALSE ))
 
@@ -81,9 +81,42 @@ B. Estrategia de negocio ha decidido que ya no operará en aquellos territorios 
 
 
 ## A
+#### Mis preguntas a resolver son: 3, 4, 6, 7, 9
+3. ¿Por qué en R utilizamos funciones de la familia apply (lapply,vapply) en lugar de utilizar ciclos?
 
-```{r }
-###resuelva acá
+Esto es para evitar el uso de ciclos por medio de funciones que operan con cada elementos de la estructura. Entonces, si se tiene un set de datos con diferentes columnas, por medio de lapply nos permite realizar operaciones aritmeticas y estadisticas por columna sin la necesidad de ciclos.
+
+4. ¿Cuál es la diferencia entre utilizar `==` y `=` en R?
+
+El primero (==) es un operador logico en donde se comparan dos objetos y si son iguales se retorna TRUE, de lo contrario, ambos elementos son diferentes. El segundo (=) es un operador de asignacion de izquierda al igual que <- pero no se suele utilizar en R como en Python y otros lenguajes de programacion. Tambien es un asignador de argumentos.
+
+6. ¿Qué es un vector y en qué se diferencia en una lista en R?
+
+Los vectores son unidimensionales, es decir almacenan diferentes tipos de carácteres y se pueden ejecutar operaciones matematicas y logicas segun el tipo de dato. Las listas son similares que los vectores, pero a diferencia de ellos, pueden almacenar diferentes tipos de datos, es dimensional como una matriz.
+
+7. ¿Qué pasa si quiero agregar una nueva categoría a un factor que no se encuentra en los niveles existentes?
+
+Al momento de analizar la informacion y ver los niveles existentes no reconoce la nueva etiqueta por lo que lo coloca como NA, para que esto no suceda y reconozca el nuevo nivel hay que hacer factor nuevamente a la cadena de datos.
+
+9. En SQL, ¿para qué utilizamos el keyword `HAVING`?
+
+Se utiliza para filtrar en base a una caracteristica en especifico en donde se utilicen funciones de grupo, en otras palabras es el where de un group by.
+
+```{r include=FALSE}
+### Mis preguntas a resolver son: 3, 4, 6, 7, 9
+
+paste0("Extra:")
+cantidad <- sample(1:10, 5, replace = F)
+cantidad
+x <- 10
+n <- 5
+generate_df <- function(x, n){ return(
+  data.frame(
+    examenes = sample(x, n, replace = FALSE)
+  )
+)}
+examen <- generate_df(x,n)
+examen
 
 ```
 
@@ -91,6 +124,42 @@ B. Estrategia de negocio ha decidido que ya no operará en aquellos territorios 
 
 
 ## B
+A. De los clientes que están en más de un país,¿cuál cree que es el más rentable y por qué?
+```{r cache=TRUE, include=FALSE}
+tabla <- readRDS("parcial_anonimo.rds")
+tabla
+```
+
+```{r include=FALSE}
+#cuantos paises tenemos
+table(tabla$pais)
+
+#tabla %>%
+ # select(pais, cliente) %>%
+  #group_by(pais) %>%
+  #summarise(n = n_distinct(cliente)) %>%
+  #hchart("column", hcaes(x = pais, y = n)) %>%
+  #hc_add_theme(hc_theme_darkunica()) %>%
+  #hc_title(text = "<b>Frecuencia de las unidades </b>") %>%
+  #hc_subtitle(text = " <i>Los camiones grandes son las unidades que más se utilizan.</i>")
+
+```
+```{r include=FALSE}
+#cuantos paises tenemos
+table(tabla$pais)
+
+#tabla %>%
+ # select(pais, cliente) %>%
+  #group_by(pais) %>%
+  #summarise(n = n_distinct(cliente)) %>%
+  #hchart("column", hcaes(x = pais, y = n)) %>%
+  #hc_add_theme(hc_theme_darkunica()) %>%
+  #hc_title(text = "<b>Frecuencia de las unidades </b>") %>%
+  #hc_subtitle(text = " <i>Los camiones grandes son las unidades que más se utilizan.</i>")
+
+```
+
+B. Estrategia de negocio ha decidido que ya no operará en aquellos territorios cuyas pérdidas sean "considerables". Bajo su criterio, ¿cuáles son estos territorios y por qué ya no debemos operar ahí?
 
 ```{r }
 ###resuelva acá
