@@ -120,6 +120,11 @@ examen
 
 ```
 
+```{r include=TRUE}
+examen
+
+```
+
 
 
 
@@ -132,7 +137,8 @@ tabla
 
 ```{r include=FALSE}
 #cuantos paises tenemos
-table(tabla$pais)
+pais <- tabla[,4]
+pais
 
 #tabla %>%
  # select(pais, cliente) %>%
@@ -144,18 +150,15 @@ table(tabla$pais)
   #hc_subtitle(text = " <i>Los camiones grandes son las unidades que más se utilizan.</i>")
 
 ```
-```{r include=FALSE}
+```{r}
 #cuantos paises tenemos
-table(tabla$pais)
+table(pais)
 
-#tabla %>%
- # select(pais, cliente) %>%
-  #group_by(pais) %>%
-  #summarise(n = n_distinct(cliente)) %>%
-  #hchart("column", hcaes(x = pais, y = n)) %>%
-  #hc_add_theme(hc_theme_darkunica()) %>%
-  #hc_title(text = "<b>Frecuencia de las unidades </b>") %>%
-  #hc_subtitle(text = " <i>Los camiones grandes son las unidades que más se utilizan.</i>")
+```
+
+```{r include=FALSE}
+
+
 
 ```
 
