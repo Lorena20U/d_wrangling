@@ -128,6 +128,8 @@ a %>%
   hc_add_theme(hc_theme_darkunica()) %>%
   hc_title(text = "<b>Costo total durante el ciclo 2017 por vehiculos. </b>")
 
+
+
 #----------------- codigos
 df %>%
   select(Cod) %>%
@@ -189,3 +191,112 @@ a %>%
   hchart("line", hcaes(x = Fecha, y = c_tot, group = origen)) %>% 
   hc_add_theme(hc_theme_darkunica()) %>%
   hc_title(text = "<b>Costo total durante el ciclo 2017 por origen. </b>")
+
+
+
+
+#------------------
+mg17 <- df %>%
+  filter(Fecha < dmy("01-10-2017")) %>%
+  summarise(mop = sum(Ganancia))
+
+baja <- mg17*0.25
+
+mg18 <- mg17 - baja
+
+a <- df %>%
+  select(Fecha, Cod, Ganancia) %>%
+  group_by(month(Fecha), Cod) %>%
+  summarise(g_tot = n())
+
+
+b <- df %>%
+  select(Fecha, Cod, Ganancia) %>%
+  group_by(month(Fecha), Cod) %>%
+  summarise(g_tot = n())
+
+names(a)[1] <- "Fecha"
+names(b)[1] <- "Fecha"
+
+c <- a$g_tot*0.05
+c[21:120] <- a$g_tot[21:120] * 0.10
+c[41:120] <- a$g_tot[41:120] * 0.15
+c[61:120] <- a$g_tot[61:120] * 0.20
+c[81:120] <- a$g_tot[81:120] * 0.25
+b$g_tot <- b$g_tot - c
+b <- b %>%
+  filter(Fecha < 10)
+
+b$Fecha <- b$Fecha + 11
+a <- bind_rows(a, b)
+
+a %>%
+  hchart("line", hcaes(x = Fecha, y = g_tot, group = Cod)) %>% 
+  hc_add_theme(hc_theme_darkunica()) %>%
+  hc_title(text = "<b>Movimiento del margen operativo. </b>")
+
+f <- df %>%
+  select(ID) %>%
+  group_by(ID) %>%
+  summarise(n=n())
+
+mean(f$n)
+f %>%
+  filter(n>4)
+
+16822/74229
+
+df %>%
+  select(ID) %>%
+  group_by(ID) %>%
+  summarise(n=n()) %>%
+  arrange(desc(n)) %>%
+  hchart("column", hcaes(x = ID, y = n)) %>%
+  hc_add_theme(hc_theme_darkunica()) %>%
+  hc_title(text = "<b>Distribución de postes </b>")
+
+d <- table(df$`120+`)
+m_82 <- d[2]/d[1]
+
+
+
+df <- df %>% 
+  mutate(mant = case_when(`120+` != "X" ~ "0"))
+
+df <- df %>%
+  mutate(mant = gsub("x","1",`120+`))
+
+df$mant <- as.numeric(df$mant)
+df$mant[is.na(df$mant)] <- 0
+df$mant <- as.numeric(df$mant)
+
+g <- df %>%
+  select(ID, mant) %>%
+  group_by(ID) %>%
+  summarise(n=sum(mant)) %>%
+  filter(n != 0)
+
+g %>%
+  hchart("column", hcaes(x = ID, y = n)) %>%
+  hc_add_theme(hc_theme_darkunica()) %>%
+  hc_title(text = "<b>Distribución de mantenimiento 120+ de los postes </b>")
+
+red <- nrow(g) * cost_prom
+red
+cost_prom <- df %>%
+  summarise(prom = mean(Costo_total))
+
+perd <- (mg17-mg18) / nrow(df)
+n_cost <- cost_prom + perd
+n_cost/cost_prom
+
+tarifario <- df %>%
+  select(factura, Cod) %>%
+  group_by(Cod) %>%
+  summarise(min = min(factura), max = max(factura), prom = mean(factura))
+tarifario
+
+mg_cr <- mg18 * 1.10
+crecimiento <- mg_cr - mg18
+crecimiento
+
